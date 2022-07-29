@@ -1,16 +1,29 @@
-# supabase_auth_by_domain
+# Supabase: auth by specific domain
 
-A new Flutter project.
+Stackoverflow question:
+https://stackoverflow.com/questions/71591949/restrict-supabase-sign-up-to-a-specific-domain
 
-## Getting Started
+1. SQL Function:
 
-This project is a starting point for a Flutter application.
+CREATE FUNCTION
+  public.check_user_domain()
+  RETURNS TRIGGER AS
+  $$
+  BEGIN
+    IF NEW.email NOT LIKE '%@test.com' THEN
+      raise exception 'INCORRECT_DOMAIN';
+    END IF;
 
-A few resources to get you started if this is your first Flutter project:
+    RETURN NEW;
+  END;
+  $$ LANGUAGE plpgsql SECURITY DEFINER;
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+2. Trigger:
+
+CREATE TRIGGER
+  check_user_domain_trigger
+  before INSERT ON auth.users
+  FOR EACH ROW
+  EXECUTE PROCEDURE
+    public.check_user_domain();
