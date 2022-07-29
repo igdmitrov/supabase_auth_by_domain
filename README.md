@@ -30,3 +30,7 @@ CREATE TRIGGER
   EXECUTE PROCEDURE
     public.check_user_domain();
 ```
+
+Youtube:
+
+[![How to make it](https://img.youtube.com/vi/C-HoRO7Wrhg/0.jpg)](https://www.youtube.com/watch?v=C-HoRO7Wrhg)
