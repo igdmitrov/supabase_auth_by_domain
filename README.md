@@ -5,6 +5,7 @@ https://stackoverflow.com/questions/71591949/restrict-supabase-sign-up-to-a-spec
 
 1. SQL Function:
 
+```
 CREATE FUNCTION
   public.check_user_domain()
   RETURNS TRIGGER AS
@@ -17,13 +18,15 @@ CREATE FUNCTION
     RETURN NEW;
   END;
   $$ LANGUAGE plpgsql SECURITY DEFINER;
-
+```
 
 2. Trigger:
 
+```
 CREATE TRIGGER
   check_user_domain_trigger
   before INSERT ON auth.users
   FOR EACH ROW
   EXECUTE PROCEDURE
     public.check_user_domain();
+```
